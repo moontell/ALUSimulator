@@ -273,7 +273,18 @@ public class ALU {
 	 */
 	public String integerTrueValue (String operand) {
 		// TODO YOUR CODE HERE.
-		return null;
+		String[] temp =operand.split("");
+		int[] eachPart =new int[temp.length];
+		int total=0;
+		for(int i=0;i<temp.length;i++){
+			if(temp[i].equals("1"))
+			eachPart[i]=(int)Math.pow(2, temp.length-1-i);
+			else eachPart[i]=0;
+			total+=eachPart[i];
+		}
+		total=total-eachPart[0]*2;
+		String result=Integer.toString(total);
+		return result;
 	}
 	
 	/**
