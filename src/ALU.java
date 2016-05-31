@@ -297,7 +297,27 @@ public class ALU {
 	 */
 	public String floatTrueValue (String operand, int eLength, int sLength) {
 		// TODO YOUR CODE HERE.
-		return null;
+		String sign;
+		if(operand.charAt(0)==0)
+			sign="";
+		else sign="-";
+		String[] temp=operand.substring(1,eLength+1).split("");
+		int[] eachPart =new int[temp.length];
+		int exponent=0;
+		for(int i=0;i<temp.length;i++){
+			if(temp[i].equals("1"))
+			eachPart[i]=(int)Math.pow(2, temp.length-1-i);
+			else eachPart[i]=0;
+			exponent+=eachPart[i];
+		}	
+		exponent-=127;
+		System.out.println(exponent);
+		double weishuJia1 =Double.parseDouble("1."+operand.substring(1+eLength));
+		Double zhi =weishuJia1*Math.pow(2, exponent);
+		String result=new String();
+		result+=sign;
+		result+=zhi.toString();
+		return result;
 	}
 	
 	/**
