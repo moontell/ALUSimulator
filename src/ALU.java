@@ -132,7 +132,7 @@ public class ALU {
 					xiaoshuBin.append((int)(xiaoshuDec*2));
 					xiaoshuDec =xiaoshuDec*2-(int)(xiaoshuDec*2);
 				}
-				System.out.println(xiaoshuBin);
+				//System.out.println(xiaoshuBin);
 				result=sign;//xiaoshuBin.substring((int) Math.pow(2, eLength-1));
 				while(result.length()<1+eLength)
 					result+="0";
@@ -298,7 +298,7 @@ public class ALU {
 	public String floatTrueValue (String operand, int eLength, int sLength) {
 		// TODO YOUR CODE HERE.
 		String sign;
-		if(operand.charAt(0)==0)
+		if(operand.startsWith("0"))
 			sign="";
 		else sign="-";
 		String[] temp=operand.substring(1,eLength+1).split("");
@@ -311,9 +311,18 @@ public class ALU {
 			exponent+=eachPart[i];
 		}	
 		exponent-=127;
-		System.out.println(exponent);
-		double weishuJia1 =Double.parseDouble("1."+operand.substring(1+eLength));
-		Double zhi =weishuJia1*Math.pow(2, exponent);
+		//System.out.println(exponent);
+		String str="1"+operand.substring(eLength+1);
+		String[] temp1 =str.split("");
+		double[] eachPart1 =new double[temp1.length];
+		double total=0;
+		for(int i=0;i<temp1.length;i++){
+			if(temp1[i].equals("1"))
+			eachPart1[i]=Math.pow(2, -i);
+			else eachPart1[i]=0;
+			total+=eachPart1[i];
+		}
+		Double zhi =total*Math.pow(2, exponent);
 		String result=new String();
 		result+=sign;
 		result+=zhi.toString();
@@ -328,7 +337,15 @@ public class ALU {
 	 */
 	public String negation (String operand) {
 		// TODO YOUR CODE HERE.
-		return null;
+		String[] temp =operand.split("");
+		String result=new String();
+		for(String cell:temp){
+			if(cell.equals("1"))
+				cell="0";
+			else cell="1";
+			result+=cell;
+		}
+		return result;
 	}
 	
 	/**
@@ -340,7 +357,16 @@ public class ALU {
 	 */
 	public String leftShift (String operand, int n) {
 		// TODO YOUR CODE HERE.
-		return null;
+		String result=new String();
+		for(int i=0;i<operand.length()-n;i++){
+			char temp=operand.charAt(i+n);
+			result+=temp;
+		}
+		for(int i=0;i<n;i++){
+			result+="0";
+		}
+		return result;
+		
 	}
 	
 	/**
@@ -352,7 +378,16 @@ public class ALU {
 	 */
 	public String logRightShift (String operand, int n) {
 		// TODO YOUR CODE HERE.
-		return null;
+		String result=new String();
+		for(int i=0;i<n;i++){
+			result+="0";
+		}
+		for(int i=0;i<operand.length()-n;i++){
+			char temp=operand.charAt(i);
+			result+=temp;
+		}
+		//System.out.println(result);
+		return result;
 	}
 	
 	/**
@@ -364,7 +399,18 @@ public class ALU {
 	 */
 	public String ariRightShift (String operand, int n) {
 		// TODO YOUR CODE HERE.
-		return null;
+		String result=new String();
+		for(int i=0;i<n;i++){
+			if(operand.startsWith("0"))
+			result+="0";
+			else result+="1";
+		}
+		for(int i=0;i<operand.length()-n;i++){
+			char temp=operand.charAt(i);
+			result+=temp;
+		}
+		//System.out.println(result);
+		return result;
 	}
 	
 	/**
@@ -377,7 +423,12 @@ public class ALU {
 	 */
 	public String fullAdder (char x, char y, char c) {
 		// TODO YOUR CODE HERE.
-		return null;
+		char first=(char) (x&y|x&c|y&c);
+		char second=(char)(x^y^c);
+		String result=new String();
+		result+=first;
+		result+=second;
+		return result;
 	}
 	
 	/**
