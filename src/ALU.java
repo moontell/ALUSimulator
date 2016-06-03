@@ -440,8 +440,35 @@ public class ALU {
 	 * @return 长度为5的字符串表示的计算结果，其中第1位是最高位进位，后4位是相加结果，其中进位不可以由循环获得
 	 */
 	public String claAdder (String operand1, String operand2, char c) {
-		// TODO YOUR CODE HERE.
-		return null;
+		char[] s=new char[4];
+		char[] cs=new char[5];
+		char[] ope1=new char[4];
+		char[] ope2=new char[4];
+		char[] p=new char[4];
+		char[] g =new char[4];
+		for(int i=0;i<4;i++){
+			ope1[i]=operand1.charAt(3-i);
+			ope2[i]=operand2.charAt(3-i);
+			p[i]=(char)(ope1[i]|ope2[i]);
+			g[i]=(char)(ope1[i]&ope2[i]);
+		}
+		cs[0]=c;
+		cs[1]=(char)(g[0]|p[0]&c);System.out.println(cs[1]);
+		cs[2]=(char)(g[1]|p[1]&g[0]|p[1]&p[1]&c);System.out.println(cs[2]);
+		cs[3]=(char)(g[2]|p[2]&g[1]|p[2]&p[1]&g[0]|p[2]&p[1]&p[0]&c);System.out.println(cs[3]);
+		cs[4]=(char)(g[3]|p[3]&g[2]|p[3]&p[2]&g[1]|p[3]&p[2]&p[1]&g[0]|p[3]&p[2]&p[1]&p[0]&c);System.out.println(cs[4]);
+		for(int i=0;i<4;i++){
+			s[i]=new ALU().fullAdder(ope1[i], ope2[i], cs[i]).charAt(1);
+			System.out.println(s[i]);
+		}
+		StringBuilder result=new StringBuilder();
+		result.append(cs[4]);
+		result.append(s[3]);
+		result.append(s[2]);
+		result.append(s[1]);
+		result.append(s[0]);
+		
+		return result.toString();
 	}
 	
 	/**
@@ -457,7 +484,34 @@ public class ALU {
 	 */
 	public String oneAdder (String operand) {
 		// TODO YOUR CODE HERE.
-		return null;
+		char[] temp=new char[operand.length()+1];
+		char[] ope2=new char[operand.length()];
+		char[] cs =new char[operand.length()+1];
+		cs[0]='1';
+		for(int i=0;i<operand.length();i++){
+			temp[i]=new ALU().menMoni(operand.charAt(operand.length()-1-i), cs[i]).charAt(1);
+			cs[i+1]=new ALU().menMoni(operand.charAt(operand.length()-1-i), cs[i]).charAt(0);
+			System.out.println(temp[i]+" "+cs[i+1]);
+		}
+		if(cs[operand.length()]==cs[operand.length()-1])
+			temp[operand.length()]='0';
+		else temp[operand.length()]='1';
+		StringBuilder result=new StringBuilder();
+		for(int i=0;i<=operand.length();i++)	
+			{result.append(temp[operand.length()-i]);
+		}
+		return result.toString();
+	}
+	//与门模拟 第一位为进位，第二位为和
+	public String menMoni (char ope1,char ope2){
+		String result=new String();
+		if(ope1==ope2){
+			if(ope1=='0')
+				result="00";
+			else result="10";
+		} else result ="01";
+		return result;
+		
 	}
 	
 	/**

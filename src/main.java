@@ -13,7 +13,9 @@ public class main {
 		//System.out.println(alu.leftShift("00001001", 2));
 		//System.out.println(alu.logRightShift("11110110", 2));
 		//System.out.println(alu.ariRightShift("11110110", 2));
-		//System.out.println(alu.fullAdder('1', '1', '0'));
+		//System.out.println(alu.fullAdder('1', '0', '0'));
+		//System.out.println(alu.claAdder ("1101","1000", '0'));
+		//System.out.println(alu.oneAdder ("00001001"));
 	}
 
 }
