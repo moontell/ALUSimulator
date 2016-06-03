@@ -453,13 +453,12 @@ public class ALU {
 			g[i]=(char)(ope1[i]&ope2[i]);
 		}
 		cs[0]=c;
-		cs[1]=(char)(g[0]|p[0]&c);System.out.println(cs[1]);
-		cs[2]=(char)(g[1]|p[1]&g[0]|p[1]&p[1]&c);System.out.println(cs[2]);
-		cs[3]=(char)(g[2]|p[2]&g[1]|p[2]&p[1]&g[0]|p[2]&p[1]&p[0]&c);System.out.println(cs[3]);
-		cs[4]=(char)(g[3]|p[3]&g[2]|p[3]&p[2]&g[1]|p[3]&p[2]&p[1]&g[0]|p[3]&p[2]&p[1]&p[0]&c);System.out.println(cs[4]);
+		cs[1]=(char)(g[0]|p[0]&c);
+		cs[2]=(char)(g[1]|p[1]&g[0]|p[1]&p[1]&c);
+		cs[3]=(char)(g[2]|p[2]&g[1]|p[2]&p[1]&g[0]|p[2]&p[1]&p[0]&c);
+		cs[4]=(char)(g[3]|p[3]&g[2]|p[3]&p[2]&g[1]|p[3]&p[2]&p[1]&g[0]|p[3]&p[2]&p[1]&p[0]&c);
 		for(int i=0;i<4;i++){
 			s[i]=new ALU().fullAdder(ope1[i], ope2[i], cs[i]).charAt(1);
-			System.out.println(s[i]);
 		}
 		StringBuilder result=new StringBuilder();
 		result.append(cs[4]);
@@ -491,7 +490,7 @@ public class ALU {
 		for(int i=0;i<operand.length();i++){
 			temp[i]=new ALU().menMoni(operand.charAt(operand.length()-1-i), cs[i]).charAt(1);
 			cs[i+1]=new ALU().menMoni(operand.charAt(operand.length()-1-i), cs[i]).charAt(0);
-			System.out.println(temp[i]+" "+cs[i+1]);
+			//System.out.println(temp[i]+" "+cs[i+1]);
 		}
 		if(cs[operand.length()]==cs[operand.length()-1])
 			temp[operand.length()]='0';
@@ -524,8 +523,57 @@ public class ALU {
 	 * @return 长度为length+1的字符串表示的计算结果，其中第1位指示是否溢出（溢出为1，否则为0），后length位是相加结果
 	 */
 	public String adder (String operand1, String operand2, char c, int length) {
-		// TODO YOUR CODE HERE.
-				return null;
+		//增加两个操作数的长度到length
+		if(operand1.length()<length){
+			String temp=new String();
+			for(int i=0;i<length-operand1.length();i++){
+				temp+=operand1.charAt(0);
+			}
+			temp+=operand1;
+			operand1=temp;
+		}
+		//System.out.println(operand1);
+		if(operand2.length()<length){
+			String temp=new String();
+			for(int i=0;i<length-operand2.length();i++){
+				temp+=operand2.charAt(0);
+			}
+			temp+=operand2;
+			operand2=temp;
+		}
+		//System.out.println(operand2);
+		
+		int temp=length/4;//=2
+		char[] cs=new char[temp+1];
+		cs[0]=c;
+		String[] temp3=new String[temp];
+		char first=operand1.charAt(0);
+		char second=operand2.charAt(0);
+		int i=0; 
+		do{
+			String temp1 =operand1.substring(operand1.length()-4);
+			operand1=operand1.substring(0, operand1.length()-4);
+			String temp2 =operand2.substring(operand2.length()-4);
+			operand2=operand2.substring(0, operand2.length()-4);
+
+			temp3[i]=new ALU().claAdder(temp1, temp2, cs[i]).substring(1);
+			//System.out.println(temp3[i]);
+			cs[i+1]=new ALU().claAdder(temp1, temp2, cs[i]).charAt(1);
+			i++;
+		}while(operand1.length()!=0);
+		int a=(first&second&(~temp3[temp-1].charAt(0)));
+		int b=((~first)&(~second)&(temp3[temp-1].charAt(0)));
+	//	System.out.println(a+" "+b);
+		char isOverflow ='0';
+		if(a==1|b==1)
+			isOverflow='1';
+		//System.out.println(isOverflow);
+		String result=new String();
+		result+=isOverflow;
+		for(int n=0;n<temp;n++){
+			result+=temp3[temp-n-1];
+		}
+		return result;
 	}
 	
 	/**
@@ -538,7 +586,7 @@ public class ALU {
 	 */
 	public String integerAddition (String operand1, String operand2, int length) {
 		// TODO YOUR CODE HERE.
-		return null;
+		return new ALU().adder(operand1, operand2, '0', length);
 	}
 	
 	/**
@@ -551,7 +599,10 @@ public class ALU {
 	 */
 	public String integerSubtraction (String operand1, String operand2, int length) {
 		// TODO YOUR CODE HERE.
-		return null;
+		operand2=this.negation(operand2);
+		operand2=this.oneAdder(operand2).substring(1);
+		String result=this.integerAddition(operand1, operand2, length);
+		return result;
 	}
 	
 	/**

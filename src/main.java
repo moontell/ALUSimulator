@@ -16,6 +16,9 @@ public class main {
 		//System.out.println(alu.fullAdder('1', '0', '0'));
 		//System.out.println(alu.claAdder ("1101","1000", '0'));
 		//System.out.println(alu.oneAdder ("00001001"));
+		//System.out.println(alu.adder("0100", "0011", '0', 8));
+		//System.out.println(alu.integerAddition("1100", "0011", 4));
+		//System.out.println(alu.integerSubtraction("1100", "0011", 4));
 	}
 
 }
