@@ -552,13 +552,15 @@ public class ALU {
 		int i=0; 
 		do{
 			String temp1 =operand1.substring(operand1.length()-4);
+			//System.out.println(temp1);
 			operand1=operand1.substring(0, operand1.length()-4);
 			String temp2 =operand2.substring(operand2.length()-4);
+			//System.out.println(temp2);
 			operand2=operand2.substring(0, operand2.length()-4);
 
 			temp3[i]=new ALU().claAdder(temp1, temp2, cs[i]).substring(1);
 			//System.out.println(temp3[i]);
-			cs[i+1]=new ALU().claAdder(temp1, temp2, cs[i]).charAt(1);
+			cs[i+1]=new ALU().claAdder(temp1, temp2, cs[i]).charAt(0);
 			i++;
 		}while(operand1.length()!=0);
 		int a=(first&second&(~temp3[temp-1].charAt(0)));
@@ -599,6 +601,7 @@ public class ALU {
 	 */
 	public String integerSubtraction (String operand1, String operand2, int length) {
 		// TODO YOUR CODE HERE.
+		
 		operand2=this.negation(operand2);
 		operand2=this.oneAdder(operand2).substring(1);
 		String result=this.integerAddition(operand1, operand2, length);
@@ -615,7 +618,76 @@ public class ALU {
 	 */
 	public String integerMultiplication (String operand1, String operand2, int length) {
 		// TODO YOUR CODE HERE.
-		return null;
+		//fuoperand =-x
+		//增加两个操作数的长度到length
+				if(operand1.length()<length){
+					String temp=new String();
+					for(int i=0;i<length-operand1.length();i++){
+						temp+=operand1.charAt(0);
+					}
+					temp+=operand1;
+					operand1=temp;
+				}
+				//System.out.println(operand1);
+				if(operand2.length()<length){
+					String temp=new String();
+					for(int i=0;i<length-operand2.length();i++){
+						temp+=operand2.charAt(0);
+					}
+					temp+=operand2;
+					operand2=temp;
+				}
+				//System.out.println(operand2);
+		String fuoperand1=this.negation(operand1);
+		fuoperand1=this.oneAdder(fuoperand1).substring(1);
+		char[] yn=new char[length+1];
+		yn[0]='0';
+		for(int i=1;i<=length;i++){
+			yn[i]=operand2.charAt(length-i);
+		}//对y[n]赋值
+		String y=operand2+'0';
+		String result=new String();
+		for(int i=0;i<length;i++){
+			result+='0';
+		}
+		result+=y;
+		//System.out.println(result);
+		//initial 
+		
+		for(int i=0;i<length;i++){
+			if(yn[i]-yn[i+1]==0){
+				result=this.ariRightShift(result, 1);
+				//continue;
+				}
+			if(yn[i]-yn[i+1]==-1){
+				String temp=this.adder(fuoperand1, result.substring(0, length), '0', length).substring(1);
+				result=temp+result.substring(length);
+				//ystem.out.println(result);
+				result=this.ariRightShift(result, 1);
+				//continue;
+			}
+			if(yn[i]-yn[i+1]==1){
+				//System.out.println(operand1+" "+result.substring(0, length));
+				String temp=this.adder(operand1, result.substring(0, length), '0', length).substring(1);
+				//System.out.println(temp);
+				result=temp+result.substring(length);
+				//System.out.println(result);
+				result=this.ariRightShift(result, 1);
+				//continue;
+			}
+			//System.out.println(result);
+		}
+		
+		//判断溢出
+		char isOverflow='0';
+		for(int i =0;i<length;i++){
+			if(result.charAt(i)=='1'){
+				isOverflow='1';
+				break;
+				}
+		}
+		result=isOverflow+result.substring(length,2*length);
+		return result;
 	}
 	
 	/**
