@@ -356,7 +356,6 @@ public class ALU {
 	 * @return operand左移n位的结果
 	 */
 	public String leftShift (String operand, int n) {
-		// TODO YOUR CODE HERE.
 		String result=new String();
 		for(int i=0;i<operand.length()-n;i++){
 			char temp=operand.charAt(i+n);
@@ -377,7 +376,6 @@ public class ALU {
 	 * @return operand逻辑右移n位的结果
 	 */
 	public String logRightShift (String operand, int n) {
-		// TODO YOUR CODE HERE.
 		String result=new String();
 		for(int i=0;i<n;i++){
 			result+="0";
@@ -457,6 +455,7 @@ public class ALU {
 		cs[2]=(char)(g[1]|p[1]&g[0]|p[1]&p[1]&c);
 		cs[3]=(char)(g[2]|p[2]&g[1]|p[2]&p[1]&g[0]|p[2]&p[1]&p[0]&c);
 		cs[4]=(char)(g[3]|p[3]&g[2]|p[3]&p[2]&g[1]|p[3]&p[2]&p[1]&g[0]|p[3]&p[2]&p[1]&p[0]&c);
+		System.out.println(cs[4]+" "+cs[3]+" "+cs[2]+" "+cs[1]+" "+cs[0]);
 		for(int i=0;i<4;i++){
 			s[i]=new ALU().fullAdder(ope1[i], ope2[i], cs[i]).charAt(1);
 		}
@@ -484,7 +483,6 @@ public class ALU {
 	public String oneAdder (String operand) {
 		// TODO YOUR CODE HERE.
 		char[] temp=new char[operand.length()+1];
-		char[] ope2=new char[operand.length()];
 		char[] cs =new char[operand.length()+1];
 		cs[0]='1';
 		for(int i=0;i<operand.length();i++){
@@ -547,8 +545,8 @@ public class ALU {
 		char[] cs=new char[temp+1];
 		cs[0]=c;
 		String[] temp3=new String[temp];
-		char first=operand1.charAt(0);
-		char second=operand2.charAt(0);
+		//char first=operand1.charAt(0);
+		//char second=operand2.charAt(0);
 		int i=0; 
 		do{
 			String temp1 =operand1.substring(operand1.length()-4);
@@ -563,11 +561,11 @@ public class ALU {
 			cs[i+1]=new ALU().claAdder(temp1, temp2, cs[i]).charAt(0);
 			i++;
 		}while(operand1.length()!=0);
-		int a=(first&second&(~temp3[temp-1].charAt(0)));
-		int b=((~first)&(~second)&(temp3[temp-1].charAt(0)));
-	//	System.out.println(a+" "+b);
+		//int a=(first&second&(~temp3[temp-1].charAt(0)));
+		//int b=((~first)&(~second)&(temp3[temp-1].charAt(0)));
+		//System.out.println(a+" "+b);
 		char isOverflow ='0';
-		if(a==1|b==1)
+		if(cs[temp]=='1')
 			isOverflow='1';
 		//System.out.println(isOverflow);
 		String result=new String();
@@ -700,7 +698,69 @@ public class ALU {
 	 */
 	public String integerDivision (String operand1, String operand2, int length) {
 		// TODO YOUR CODE HERE.
-		return null;
+		String yikaishiope1=operand1;
+		String fuoperand2=this.negation(operand2);
+		fuoperand2=this.oneAdder(fuoperand2).substring(1);
+		//增加两个操作数的长度到length
+		if(operand1.length()<2*length){
+			String temp=new String();
+			for(int i=0;i<2*length-operand1.length();i++){
+				temp+=operand1.charAt(0);
+			}
+			temp+=operand1;
+			operand1=temp;
+		}
+		//System.out.println(operand1);
+		if(operand2.length()<length){
+			String temp=new String();
+			for(int i=0;i<length-operand2.length();i++){
+				temp+=operand2.charAt(0);
+			}
+			temp+=operand2;
+			operand2=temp;
+		}
+		//System.out.println(operand2);
+		for(int i=0;i<=length;i++){
+			if(operand1.charAt(0)!=operand2.charAt(0)){
+				String temp =this.adder(operand1.substring(0,length), operand2, '0', length).substring(1);
+				operand1=temp+operand1.substring(length);
+				//System.out.println(operand1);
+				if(operand1.charAt(0)==operand2.charAt(0)){
+					operand1+='1';
+				}else{operand1+='0';
+				}
+				if(i!=length)
+					operand1=operand1.substring(1);
+				//System.out.println(operand1+" "+i);
+				continue;
+			}
+			if(operand1.charAt(0)==operand2.charAt(0)){
+				String temp =this.adder(operand1.substring(0,length), fuoperand2, '0', length).substring(1);
+				operand1=temp+operand1.substring(length);
+				//System.out.println(operand1);
+				if(operand1.charAt(0)==operand2.charAt(0)){
+					operand1+='1';
+				}else{operand1+='0';
+				}
+				if(i!=length)
+					operand1=operand1.substring(1);
+				//System.out.println(operand1+" "+i);
+				continue;
+			}
+		}
+		
+		String remainder=new String();
+		String quotient=operand1.substring(length+1);
+		char isOverflow =this.oneAdder(quotient).charAt(0);
+		quotient=this.oneAdder(quotient).substring(1);
+		if(operand1.charAt(0)==yikaishiope1.charAt(0)){
+			remainder=operand1.substring(0,length);
+		}else{
+			remainder=operand1.substring(0,length);//System.out.println(remainder);
+			remainder=this.adder(remainder, fuoperand2, '0', length).substring(1);
+		}
+		//System.out.println(remainder);
+		return isOverflow+quotient+remainder;
 	}
 	
 	/**
@@ -715,7 +775,82 @@ public class ALU {
 	 */
 	public String signedAddition (String operand1, String operand2, int length) {
 		// TODO YOUR CODE HERE.
-		return null;
+		String result=new String();
+		
+		if(operand1.charAt(0)==operand2.charAt(0)){
+			char sign =operand1.charAt(0);
+			//System.out.println(sign);
+			operand1=operand1.substring(1);
+			operand2=operand2.substring(1);
+			//增加两个操作数的长度到length
+			if(operand1.length()<length){
+				String temp=new String();
+				for(int i=0;i<length-operand1.length();i++){
+					temp+='0';
+				}
+				temp+=operand1;
+				operand1=temp;
+			}
+			//System.out.println(operand1);
+			if(operand2.length()<length){
+				String temp=new String();
+				for(int i=0;i<length-operand2.length();i++){
+					temp+='0';
+				}
+				temp+=operand2;
+				operand2=temp;
+			}
+			//System.out.println(operand2);
+			
+			String temp=this.adder(operand1, operand2, '0', length).substring(1);
+			char isOverflow =this.adder(operand1, operand2, '0', length).charAt(0);
+			//System.out.println(isOverflow);
+			result =isOverflow+""+sign+temp;
+		}else{
+			char sign1=operand1.charAt(0);
+			char sign2 =operand2.charAt(0);
+			
+			operand1=operand1.substring(1);
+			operand2=operand2.substring(1);
+			
+			//增加两个操作数的长度到length
+			if(operand1.length()<length){
+				String temp=new String();
+				for(int i=0;i<length-operand1.length();i++){
+					temp+='0';
+				}
+				temp+=operand1;
+				operand1=temp;
+			}
+			System.out.println(operand1);
+			if(operand2.length()<length){
+				String temp=new String();
+				for(int i=0;i<length-operand2.length();i++){
+					temp+='0';
+				}
+				temp+=operand2;
+				operand2=temp;
+			}
+			System.out.println(operand2);
+			
+			String temp;
+			char sign;
+			System.out.println(this.adder(operand1, this.negation(operand2), '0', operand2.length())/*.charAt(0)=='0'*/);
+			if(this.adder(operand1, this.negation(operand2), '0', operand2.length()).charAt(0)=='0'){
+				temp =this.adder(operand1, this.negation(operand2), '0', operand2.length()).substring(1);
+				sign=sign2;
+				}
+			else{
+				temp =this.adder(operand2, this.negation(operand1), '0', operand2.length()).substring(1);
+				sign =sign1;
+			}
+			
+			temp =this.negation(temp);
+			
+			char isOverflow='0';
+			result=isOverflow+""+sign+temp;
+		}
+		return result;
 	}
 	
 	/**
