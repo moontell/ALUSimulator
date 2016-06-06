@@ -121,7 +121,7 @@ public class ALU {
 				result+="1";
 			return result;
 		}
-		if(Double.parseDouble(number)<Math.pow(2, -Math.pow(2, eLength-1))&&Double.valueOf(number)>-Math.pow(2, -Math.pow(2, eLength-1)))
+		if(Double.parseDouble(number)<Math.pow(2, -Math.pow(2, eLength-1)+1)&&Double.valueOf(number)>-Math.pow(2, -Math.pow(2, eLength-1)+1))
 			{
 			if(number.startsWith("-")){
 				sign="1";
@@ -297,6 +297,10 @@ public class ALU {
 	 */
 	public String floatTrueValue (String operand, int eLength, int sLength) {
 		// TODO YOUR CODE HERE.
+		if(!operand.contains("1"))
+			return "0";
+		if((operand.charAt(0)=='1')&&(!operand.substring(1).contains("1")))
+			return "0";
 		String sign;
 		if(operand.startsWith("0"))
 			sign="";
@@ -499,6 +503,27 @@ public class ALU {
 		}
 		return result.toString();
 	}
+	
+	public String oneAdder1 (String operand) {
+		// TODO YOUR CODE HERE.
+		char[] temp=new char[operand.length()+1];
+		char[] cs =new char[operand.length()+1];
+		cs[0]='1';
+		for(int i=0;i<operand.length();i++){
+			temp[i]=new ALU().menMoni(operand.charAt(operand.length()-1-i), cs[i]).charAt(1);
+			cs[i+1]=new ALU().menMoni(operand.charAt(operand.length()-1-i), cs[i]).charAt(0);
+			//System.out.println(temp[i]+" "+cs[i+1]);
+		}
+		if(cs[operand.length()]=='1')
+			temp[operand.length()]='1';
+		else temp[operand.length()]='0';
+		StringBuilder result=new StringBuilder();
+		for(int i=0;i<=operand.length();i++)	
+			{result.append(temp[operand.length()-i]);
+		}
+		return result.toString();
+	}
+
 	//与门模拟 第一位为进位，第二位为和
 	public String menMoni (char ope1,char ope2){
 		String result=new String();
@@ -906,7 +931,51 @@ public class ALU {
 	 */
 	public String floatAddition (String operand1, String operand2, int eLength, int sLength, int gLength) {
 		// TODO YOUR CODE HERE.
-		return null;
+		if(this.floatTrueValue(operand1, eLength, sLength).equals("0")){
+			return "0"+operand2;
+		}else{
+			if(this.floatTrueValue(operand2, eLength, sLength).equals("0")){
+				return "0"+operand1;
+			}else{
+				String temp3=new String();
+				String result=new String();
+				while(!operand1.substring(1,eLength+1).equals(operand2.substring(1,eLength+1))){
+					String temp1=this.integerTrueValue("0"+operand1.substring(1,eLength+1));
+					String temp2=this.integerTrueValue("0"+operand2.substring(1,eLength+1));
+					if(Integer.parseInt(temp1)<Integer.parseInt(temp2)){
+						temp3=operand1;
+						operand1=operand2;
+						operand2=temp3;
+					}
+						temp3=this.oneAdder1(operand2.substring(1,eLength+1)).substring(1);
+						operand2=operand2.charAt(0)+temp3+this.logRightShift(operand2.substring(eLength+1), 1);
+						if(this.integerTrueValue(operand2.substring(1+eLength)).equals("0")){
+							return "0"+operand1;
+						}
+				}//end while
+				String weishu=this.signedAddition(operand1.charAt(0)+operand1.substring(eLength+1), operand2.charAt(0)+operand1.substring(eLength+1), ((eLength+1)/4+1)*4).substring(((eLength+1)/4+1)*4+2+1-sLength);
+				char sign =this.signedAddition(operand1.charAt(0)+operand1.substring(eLength+1), operand2.charAt(0)+operand1.substring(eLength+1), ((eLength+1)/4+1)*4).charAt(1);
+				result=sign+operand1.substring(1,1+eLength)+weishu;
+				if(this.integerTrueValue(weishu).equals("0"))
+					return "0";
+				//尾数溢出？的处理
+				if(this.signedAddition(operand1.charAt(0)+operand1.substring(eLength+1), operand2.charAt(0)+operand1.substring(eLength+1), ((eLength+1)/4+1)*4).charAt(0)=='1'){
+					temp3=this.oneAdder1(operand2.substring(1,eLength+1)).substring(1);
+					result=result.charAt(0)+temp3+this.logRightShift(result.substring(eLength+1), 1);
+					//如果指数上溢
+					if(this.oneAdder1(operand2.substring(1,eLength+1)).charAt(0)=='1'){
+						result=result.substring(0, 1+eLength);
+						for(int i=0;i<sLength;i++)
+							result+='0';
+						return result;
+					}	
+				}else while(result.substring(eLength+1).charAt(0)=='0'&&!this.integerTrueValue(result.substring(1,1+eLength)).equals("0")){
+					temp3=this.integerSubtraction('0'+result.substring(1,eLength+1), "1",((eLength+1)/4+1)*4 ).substring(((eLength+1)/4+1)*4+1-eLength);//指数减1
+					result=result.charAt(0)+temp3+this.leftShift(result.substring(eLength+1), 1);
+				}
+				return result;
+			} 
+		}
 	}
 	
 	/**
@@ -921,7 +990,11 @@ public class ALU {
 	 */
 	public String floatSubtraction (String operand1, String operand2, int eLength, int sLength, int gLength) {
 		// TODO YOUR CODE HERE.
-		return null;
+		if(operand2.charAt(0)=='0')
+			operand2='1'+operand2.substring(1);
+		else operand2='0'+operand2.substring(1);
+		String result=this.floatAddition(operand1, operand2, eLength, sLength, gLength);
+		return result;
 	}
 	
 	/**
