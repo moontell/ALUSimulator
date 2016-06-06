@@ -545,8 +545,8 @@ public class ALU {
 		char[] cs=new char[temp+1];
 		cs[0]=c;
 		String[] temp3=new String[temp];
-		//char first=operand1.charAt(0);
-		//char second=operand2.charAt(0);
+		char first=operand1.charAt(0);
+		char second=operand2.charAt(0);
 		int i=0; 
 		do{
 			String temp1 =operand1.substring(operand1.length()-4);
@@ -561,11 +561,11 @@ public class ALU {
 			cs[i+1]=new ALU().claAdder(temp1, temp2, cs[i]).charAt(0);
 			i++;
 		}while(operand1.length()!=0);
-		//int a=(first&second&(~temp3[temp-1].charAt(0)));
-		//int b=((~first)&(~second)&(temp3[temp-1].charAt(0)));
+		int a=(first&second&(~temp3[temp-1].charAt(0)));
+		int b=((~first)&(~second)&(temp3[temp-1].charAt(0)));
 		//System.out.println(a+" "+b);
 		char isOverflow ='0';
-		if(cs[temp]=='1')
+		if(a==1|b==1)
 			isOverflow='1';
 		//System.out.println(isOverflow);
 		String result=new String();
@@ -779,7 +779,7 @@ public class ALU {
 		
 		if(operand1.charAt(0)==operand2.charAt(0)){
 			char sign =operand1.charAt(0);
-			//System.out.println(sign);
+			System.out.println(sign);
 			operand1=operand1.substring(1);
 			operand2=operand2.substring(1);
 			//增加两个操作数的长度到length
@@ -791,7 +791,7 @@ public class ALU {
 				temp+=operand1;
 				operand1=temp;
 			}
-			//System.out.println(operand1);
+			System.out.println(operand1);
 			if(operand2.length()<length){
 				String temp=new String();
 				for(int i=0;i<length-operand2.length();i++){
@@ -800,11 +800,52 @@ public class ALU {
 				temp+=operand2;
 				operand2=temp;
 			}
-			//System.out.println(operand2);
-			
-			String temp=this.adder(operand1, operand2, '0', length).substring(1);
-			char isOverflow =this.adder(operand1, operand2, '0', length).charAt(0);
-			//System.out.println(isOverflow);
+			System.out.println(operand2);
+			//起
+			if(operand1.length()<length){
+			String tempt=new String();
+			for(int i=0;i<length-operand1.length();i++){
+				tempt+=operand1.charAt(0);
+			}
+			tempt+=operand1;
+			operand1=tempt;
+		}
+		//System.out.println(operand1);
+		if(operand2.length()<length){
+			String tempt=new String();
+			for(int i=0;i<length-operand2.length();i++){
+				tempt+=operand2.charAt(0);
+			}
+			tempt+=operand2;
+			operand2=tempt;
+		}
+		//System.out.println(operand2);
+		
+		int tempt=length/4;//=2
+		char[] cs=new char[tempt+1];
+		cs[0]='0';
+		String[] temp3=new String[tempt];
+		int i=0; 
+		do{
+			String temp1 =operand1.substring(operand1.length()-4);
+			//System.out.println(temp1);
+			operand1=operand1.substring(0, operand1.length()-4);
+			String temp2 =operand2.substring(operand2.length()-4);
+			//System.out.println(temp2);
+			operand2=operand2.substring(0, operand2.length()-4);
+
+			temp3[i]=new ALU().claAdder(temp1, temp2, cs[i]).substring(1);
+			//System.out.println(temp3[i]);
+			cs[i+1]=new ALU().claAdder(temp1, temp2, cs[i]).charAt(0);
+			i++;
+		}while(operand1.length()!=0);
+			//末
+		String temp = new String();
+			for(int n=0;n<tempt;n++){
+				temp+=temp3[tempt-n-1];
+			}
+			char isOverflow =cs[tempt];
+			System.out.println(isOverflow);
 			result =isOverflow+""+sign+temp;
 		}else{
 			char sign1=operand1.charAt(0);

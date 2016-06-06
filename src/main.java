@@ -14,14 +14,14 @@ public class main {
 		//System.out.println(alu.logRightShift("11110110", 2));
 		//System.out.println(alu.ariRightShift("11110110", 2));
 		//System.out.println(alu.fullAdder('1', '0', '0'));
-		//System.out.println(alu.claAdder ("1111","0000", '0'));
+		//System.out.println(alu.claAdder ("0100", "1101", '0'));
 		//System.out.println(alu.oneAdder ("00001001"));
-		//System.out.println(alu.adder("1101", "0011", '0', 4));
-		//System.out.println(alu.integerAddition("1100", "0011", 4));
-		//System.out.println(alu.integerSubtraction("1100", "0011", 4));
+		//System.out.println(alu.adder("1001", "1001", '0', 4));
+		//System.out.println(alu.integerAddition("1100", "0011", 8));
+		//System.out.println(alu.integerSubtraction("0100", "0011", 4));
 		//System.out.println(alu.integerMultiplication("11111001", "11111010", 8));
 		//System.out.println(alu.integerDivision("1001", "0011", 4));
-		System.out.println(alu.signedAddition("1111", "1111", 4));
+		System.out.println(alu.signedAddition("01111", "01111", 4));
 	}
 
 }
