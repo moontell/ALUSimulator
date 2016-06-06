@@ -455,7 +455,7 @@ public class ALU {
 		cs[2]=(char)(g[1]|p[1]&g[0]|p[1]&p[1]&c);
 		cs[3]=(char)(g[2]|p[2]&g[1]|p[2]&p[1]&g[0]|p[2]&p[1]&p[0]&c);
 		cs[4]=(char)(g[3]|p[3]&g[2]|p[3]&p[2]&g[1]|p[3]&p[2]&p[1]&g[0]|p[3]&p[2]&p[1]&p[0]&c);
-		System.out.println(cs[4]+" "+cs[3]+" "+cs[2]+" "+cs[1]+" "+cs[0]);
+		//System.out.println(cs[4]+" "+cs[3]+" "+cs[2]+" "+cs[1]+" "+cs[0]);
 		for(int i=0;i<4;i++){
 			s[i]=new ALU().fullAdder(ope1[i], ope2[i], cs[i]).charAt(1);
 		}
@@ -779,7 +779,7 @@ public class ALU {
 		
 		if(operand1.charAt(0)==operand2.charAt(0)){
 			char sign =operand1.charAt(0);
-			System.out.println(sign);
+			//System.out.println(sign);
 			operand1=operand1.substring(1);
 			operand2=operand2.substring(1);
 			//增加两个操作数的长度到length
@@ -791,7 +791,7 @@ public class ALU {
 				temp+=operand1;
 				operand1=temp;
 			}
-			System.out.println(operand1);
+			//System.out.println(operand1);
 			if(operand2.length()<length){
 				String temp=new String();
 				for(int i=0;i<length-operand2.length();i++){
@@ -800,7 +800,7 @@ public class ALU {
 				temp+=operand2;
 				operand2=temp;
 			}
-			System.out.println(operand2);
+			//System.out.println(operand2);
 			//起
 			if(operand1.length()<length){
 			String tempt=new String();
@@ -845,7 +845,7 @@ public class ALU {
 				temp+=temp3[tempt-n-1];
 			}
 			char isOverflow =cs[tempt];
-			System.out.println(isOverflow);
+			//System.out.println(isOverflow);
 			result =isOverflow+""+sign+temp;
 		}else{
 			char sign1=operand1.charAt(0);
